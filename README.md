@@ -94,22 +94,30 @@ The toolkit is **self-propelled** — it carries everything it needs to install 
 
 This gives every capability **two surfaces**: an explicit slash command (`/speckit-feature`) and an auto-discovered skill (`speckit-feature`), both backed by the same knowledge base.
 
-## Install into another project (self-propelled)
+## Install into another project (one line)
 
-The repo ships prebuilt artifacts and an installer that works **with or without** the `specify` CLI:
+The installer is driven entirely by the spec-kit **`specify` CLI**. From the root of the project you want to equip:
 
 ```bash
-# Pure file install (no dependency) — pick your agent:
-./install.sh --target /path/to/project --agent claude     # or copilot | gemini | codex | cursor
-
-# Preview first:
-./install.sh --target /path/to/project --dry-run
-
-# Also register the preset through the spec-kit CLI when it's available:
-./install.sh --target /path/to/project --with-specify
+curl -fsSL https://raw.githubusercontent.com/Satcomx00-x00/speckit-python/main/install.sh | bash
 ```
 
-This deploys the commands, skills, knowledge base, templates, and audit scripts into the target. The toolkit is also declared as a spec-kit extension in `extension.yml` (`specify extension add`) and as a preset in `presets/python/preset.yml` (`specify preset add --dev ./presets/python`).
+Pass flags through the pipe with `-s --`:
+
+```bash
+# choose the agent and install agent-skills (instead of prompt files):
+curl -fsSL https://raw.githubusercontent.com/Satcomx00-x00/speckit-python/main/install.sh | bash -s -- --target . --agent claude --skills
+
+# preview the specify commands without running them:
+curl -fsSL https://raw.githubusercontent.com/Satcomx00-x00/speckit-python/main/install.sh | bash -s -- --dry-run
+```
+
+What it does, using **only** `specify`:
+1. ensures `uv` and the `specify` CLI are installed (installs them if missing),
+2. fetches this toolkit (or uses your local checkout),
+3. registers it into the target with `specify preset add --dev ./presets/python` (constitution template + commands) and `specify extension add --dev .` (commands + skills + knowledge base, per `extension.yml`).
+
+`--agent` accepts `claude | copilot | gemini | codex | cursor`. Run `./install.sh --help` for all options.
 
 ## Quickstart
 
@@ -155,7 +163,7 @@ uv run ruff check && uv run mypy --strict src && uv run pytest
 ├── scripts/build-skills.py      # regenerates skills/ from the commands + knowledge map
 ├── workflows/python-feature/    # end-to-end feature delivery workflow
 ├── extension.yml                # spec-kit extension manifest (commands+skills+knowledge)
-├── install.sh                   # self-propelled installer (specify-aware, file fallback)
+├── install.sh                   # self-propelled installer (specify-driven; curl | bash)
 ├── pyproject.toml               # canonical uv + Ruff + mypy(strict) + pytest config
 ├── AGENTS.md  ·  CLAUDE.md      # always-on agent operating rules
 └── preset.yml                   # active preset manifest (root)

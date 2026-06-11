@@ -1,152 +1,148 @@
 #!/usr/bin/env bash
 #
-# install.sh — self-propelled installer for the Python Spec Kit.
+# install.sh — self-propelled installer for the Python Spec Kit, driven entirely
+# by the spec-kit `specify` CLI.
 #
-# Deploys this repo's prebuilt artifacts into a target project:
-#   - slash commands  -> <agent>/commands (or .claude/commands)
-#   - agent skills    -> <agent>/skills/<id>/SKILL.md  (agentskills.io)
-#   - knowledge base  -> <target>/.specify/memory/knowledge/
-#   - templates       -> <target>/.specify/templates/  (+ AGENTS.md)
-#   - audit scripts   -> <target>/.specify/scripts/bash/
-#   - constitution    -> <target>/.specify/memory/constitution-template.md
+# It (1) ensures `uv` and `specify` are installed, (2) obtains this toolkit
+# (the local checkout when run from the repo, otherwise a shallow clone), and
+# (3) installs it into a target project using ONLY `specify` subcommands —
+# `specify preset add` (constitution template + commands) and
+# `specify extension add` (commands + skills + knowledge base from extension.yml).
 #
-# It uses the `specify` CLI to register the preset when available
-# (--with-specify), and otherwise — or in addition — installs everything with a
-# pure file copy so the repo is fully self-contained.
+# One-line install (executes this script straight from the download):
 #
-# Usage:
-#   ./install.sh [--target DIR] [--agent AGENT] [--with-specify] [--dry-run] [--force]
+#   curl -fsSL https://raw.githubusercontent.com/Satcomx00-x00/speckit-python/main/install.sh | bash
 #
-#   --target DIR     Project to install into (default: current directory)
-#   --agent AGENT    claude | copilot | gemini | codex | cursor (default: claude)
-#   --with-specify   Also register the preset/extension via the `specify` CLI
-#   --dry-run        Print actions without writing
-#   --force          Overwrite an existing constitution/AGENTS.md
-#   -h, --help       Show this help
+# With arguments (note the `-s --` to pass flags through the pipe):
+#
+#   curl -fsSL https://raw.githubusercontent.com/Satcomx00-x00/speckit-python/main/install.sh | bash -s -- --target . --agent claude --skills
+#
+# Usage (when run directly):
+#   ./install.sh [--target DIR] [--agent AGENT] [--skills] [--dry-run]
+#
+#   --target DIR   Project to install into (default: current directory)
+#   --agent AGENT  specify integration: claude | copilot | gemini | codex | cursor (default: claude)
+#   --skills       Install agent skills (specify --skills mode) instead of prompt files
+#   --dry-run      Print the specify commands without running them
+#   -h, --help     Show this help
+#
+# Environment overrides:
+#   SPECKIT_REPO   Git URL of this toolkit  (default: https://github.com/Satcomx00-x00/speckit-python.git)
+#   SPECKIT_REF    Branch/tag/commit to clone (default: main)
 #
 set -euo pipefail
 
-SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TARGET="$(pwd)"
 AGENT="claude"
-WITH_SPECIFY=0
+SKILLS=0
 DRY_RUN=0
-FORCE=0
+SPECKIT_REPO="${SPECKIT_REPO:-https://github.com/Satcomx00-x00/speckit-python.git}"
+SPECKIT_REF="${SPECKIT_REF:-main}"
 
 log()  { printf '  %s\n' "$*"; }
 info() { printf '\033[1m%s\033[0m\n' "$*"; }
 warn() { printf '\033[33mwarn:\033[0m %s\n' "$*" >&2; }
 die()  { printf '\033[31merror:\033[0m %s\n' "$*" >&2; exit 1; }
 
-usage() { sed -n '3,30p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; }
+usage() { sed -n '20,31p' "${BASH_SOURCE[0]:-/dev/null}" 2>/dev/null | sed 's/^# \{0,1\}//'; }
+
+# run <cmd...> — echo and execute, honoring --dry-run.
+run() {
+    printf '\033[2m$ %s\033[0m\n' "$*"
+    [[ $DRY_RUN -eq 1 ]] && return 0
+    "$@"
+}
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --target)       TARGET="${2:?}"; shift 2 ;;
-        --agent)        AGENT="${2:?}"; shift 2 ;;
-        --with-specify) WITH_SPECIFY=1; shift ;;
-        --dry-run)      DRY_RUN=1; shift ;;
-        --force)        FORCE=1; shift ;;
-        -h|--help)      usage; exit 0 ;;
-        *)              die "unknown argument: $1 (try --help)" ;;
+        --target)  TARGET="${2:?}"; shift 2 ;;
+        --agent)   AGENT="${2:?}"; shift 2 ;;
+        --skills)  SKILLS=1; shift ;;
+        --dry-run) DRY_RUN=1; shift ;;
+        -h|--help) usage; exit 0 ;;
+        *)         die "unknown argument: $1 (try --help)" ;;
     esac
 done
 
-[[ -d "$SRC/skills" ]] || die "run scripts/build-skills.py first — skills/ is missing"
+case "$AGENT" in
+    claude|copilot|gemini|codex|cursor) ;;
+    *) die "unsupported agent: $AGENT (claude|copilot|gemini|codex|cursor)" ;;
+esac
 [[ -d "$TARGET" ]] || die "target directory does not exist: $TARGET"
 
-# Per-agent destination directories. Command files and skills are plain Markdown;
-# only the directory differs between agents.
-case "$AGENT" in
-    claude)  CMD_DIR=".claude/commands"; SKILL_DIR=".claude/skills" ;;
-    copilot) CMD_DIR=".github/prompts";  SKILL_DIR=".github/skills" ;;
-    gemini)  CMD_DIR=".gemini/commands"; SKILL_DIR=".gemini/skills" ;;
-    codex)   CMD_DIR=".codex/prompts";   SKILL_DIR=".codex/skills" ;;
-    cursor)  CMD_DIR=".cursor/commands"; SKILL_DIR=".cursor/skills" ;;
-    *)       die "unsupported agent: $AGENT (claude|copilot|gemini|codex|cursor)" ;;
-esac
-
-# do_mkdir / do_cp respect --dry-run.
-do_mkdir() { [[ $DRY_RUN -eq 1 ]] && { log "mkdir -p $1"; return; }; mkdir -p "$1"; }
-do_cp()    { [[ $DRY_RUN -eq 1 ]] && { log "cp $1 -> $2"; return; }; cp "$1" "$2"; }
-
-install_tree() {  # install_tree <src-glob-dir> <dst-dir> <pattern>
-    local sdir="$1" ddir="$2" pat="$3" f
-    do_mkdir "$ddir"
-    shopt -s nullglob
-    for f in "$sdir"/$pat; do
-        do_cp "$f" "$ddir/$(basename "$f")"
-    done
-    shopt -u nullglob
+# ── 1. Ensure uv ──────────────────────────────────────────────────────────────
+ensure_uv() {
+    if command -v uv >/dev/null 2>&1; then return 0; fi
+    [[ $DRY_RUN -eq 1 ]] && { warn "uv not found — would install it"; return 0; }
+    info "Installing uv (required to install the specify CLI)"
+    run sh -c 'curl -LsSf https://astral.sh/uv/install.sh | sh'
+    # uv installs to ~/.local/bin or ~/.cargo/bin; make it visible for this run.
+    export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+    command -v uv >/dev/null 2>&1 || die "uv installation did not land on PATH; restart your shell and re-run"
 }
 
-info "Python Spec Kit — installing into: $TARGET"
-log "source : $SRC"
-log "agent  : $AGENT  (commands -> $CMD_DIR, skills -> $SKILL_DIR)"
-[[ $DRY_RUN -eq 1 ]] && warn "dry-run: no files will be written"
+# ── 2. Ensure the spec-kit `specify` CLI ──────────────────────────────────────
+ensure_specify() {
+    if command -v specify >/dev/null 2>&1; then return 0; fi
+    [[ $DRY_RUN -eq 1 ]] && { warn "specify not found — would install it via uv"; return 0; }
+    info "Installing the spec-kit CLI (specify) via uv"
+    run uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+    export PATH="$HOME/.local/bin:$PATH"
+    command -v specify >/dev/null 2>&1 || [[ $DRY_RUN -eq 1 ]] \
+        || die "specify not found after install; ensure 'uv tool' bin dir is on PATH (uv tool update-shell)"
+}
 
-# 1. Slash commands (prebuilt dash-form; the slash names are plain text and
-#    valid guidance for every agent).
-info "1/6  commands"
-install_tree "$SRC/.claude/commands" "$TARGET/$CMD_DIR" "*.md"
-
-# 2. Skills (one directory per skill, each with SKILL.md).
-info "2/6  skills"
-if [[ $DRY_RUN -eq 1 ]]; then
-    log "cp -r $SRC/skills/* -> $TARGET/$SKILL_DIR/"
-else
-    mkdir -p "$TARGET/$SKILL_DIR"
-    cp -R "$SRC"/skills/. "$TARGET/$SKILL_DIR/"
-fi
-
-# 3. Knowledge base (progressive-disclosure reference docs).
-info "3/6  knowledge base"
-install_tree "$SRC/knowledge" "$TARGET/.specify/memory/knowledge" "*.md"
-
-# 4. Templates + AGENTS.md.
-info "4/6  templates"
-install_tree "$SRC/presets/python/templates" "$TARGET/.specify/templates" "*.md"
-if [[ -f "$TARGET/AGENTS.md" && $FORCE -eq 0 ]]; then
-    warn "AGENTS.md exists — leaving it (use --force to overwrite)"
-else
-    do_cp "$SRC/presets/python/templates/agent-context.md" "$TARGET/AGENTS.md"
-fi
-
-# 5. Audit/scan scripts.
-info "5/6  scripts"
-install_tree "$SRC/presets/python/scripts/bash" "$TARGET/.specify/scripts/bash" "*.sh"
-if [[ $DRY_RUN -eq 0 ]]; then
-    chmod +x "$TARGET"/.specify/scripts/bash/*.sh 2>/dev/null || true
-fi
-
-# 6. Constitution template (never clobber an existing, project-specific constitution).
-info "6/6  constitution"
-do_mkdir "$TARGET/.specify/memory"
-do_cp "$SRC/presets/python/templates/constitution-template.md" \
-      "$TARGET/.specify/memory/constitution-template.md"
-if [[ -f "$TARGET/.specify/memory/constitution.md" && $FORCE -eq 0 ]]; then
-    log "constitution.md exists — left untouched"
-else
-    log "no constitution yet — run /speckit-constitution-scan to generate one"
-fi
-
-# Optional: register with the spec-kit CLI.
-if [[ $WITH_SPECIFY -eq 1 ]]; then
-    info "specify  registering preset/extension"
-    if command -v specify >/dev/null 2>&1; then
-        ( cd "$TARGET" && specify preset add --dev "$SRC/presets/python" ) \
-            || warn "specify preset add failed (continuing — files were copied directly)"
-    else
-        warn "specify not found on PATH — skipped CLI registration (files were copied directly)"
+# ── 3. Obtain the toolkit source ──────────────────────────────────────────────
+# When run from a checkout, use it. When piped from curl, clone a shallow copy.
+resolve_src() {
+    local here=""
+    if [[ -n "${BASH_SOURCE[0]:-}" && -f "$(dirname "${BASH_SOURCE[0]}")/extension.yml" ]]; then
+        here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+        printf '%s' "$here"
+        return 0
     fi
-fi
+    local tmp
+    tmp="$(mktemp -d)"
+    info "Fetching the toolkit ($SPECKIT_REPO @ $SPECKIT_REF)" >&2
+    run git clone --depth 1 --branch "$SPECKIT_REF" "$SPECKIT_REPO" "$tmp" >&2
+    printf '%s' "$tmp"
+}
+
+info "Python Spec Kit — specify-driven install into: $TARGET"
+log  "agent: $AGENT   skills: $([[ $SKILLS -eq 1 ]] && echo on || echo off)"
+[[ $DRY_RUN -eq 1 ]] && warn "dry-run: commands are printed, not executed"
+
+ensure_uv
+ensure_specify
+SRC="$(resolve_src)"
+[[ $DRY_RUN -eq 1 || -f "$SRC/extension.yml" ]] || die "toolkit source missing extension.yml at $SRC"
+
+# ── 4. Install via specify ────────────────────────────────────────────────────
+# Everything below uses ONLY the specify CLI. preset add wires the constitution
+# template + commands; extension add wires commands + skills + the knowledge base
+# declared in extension.yml.
+info "Installing with specify"
+cd "$TARGET"
+
+PRESET_FLAGS=()
+EXT_FLAGS=()
+[[ $SKILLS -eq 1 ]] && { PRESET_FLAGS+=(--skills); EXT_FLAGS+=(--skills); }
+
+run specify preset add --dev "$SRC/presets/python" --ai "$AGENT" "${PRESET_FLAGS[@]}" \
+    || warn "specify preset add failed — check 'specify --version' and that this is a spec-kit project (specify init)"
+
+run specify extension add --dev "$SRC" --ai "$AGENT" "${EXT_FLAGS[@]}" \
+    || warn "specify extension add failed — your specify version may require 'specify extension add <catalog-id>'; try: specify extension add python"
 
 info "Done."
 cat <<EOF
 
 Next steps in $TARGET:
-  1. Review .specify/memory/knowledge/ and .specify/templates/
-  2. Generate the project constitution:   /speckit-constitution-scan
-  3. Sync agent context files:            /speckit-docs-sync
-  4. Build your first feature:            /speckit-feature <name>
+  1. specify check                       # verify the toolkit registered
+  2. /speckit-constitution-scan          # generate the project constitution
+  3. /speckit-docs-sync                  # sync agent context files
+  4. /speckit-feature <name>             # build your first feature
+
+Re-run anywhere with the one-liner:
+  curl -fsSL https://raw.githubusercontent.com/Satcomx00-x00/speckit-python/main/install.sh | bash
 EOF

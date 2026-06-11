@@ -51,12 +51,12 @@ installable into a target project via the `specify` CLI (with a fallback when
 - Single source of truth — no hand-maintained duplicate command/skill bodies.
 - Progressive disclosure — keep per-call context small (Anthropic skill best practice: SKILL.md < 500 lines, references one level deep, reference files cost zero tokens until read).
 - Self-contained distribution — the repo carries prebuilt skills + knowledge.
-- `specify`-installable, but degrades to a pure file install with no CLI dependency.
+- Installed through the `specify` CLI only, via a one-line `curl … | bash`.
 - Multi-agent — the same artifacts serve Claude, Copilot, Codex, Gemini, Cursor.
 
 ## Considered Options
 
-1. **Generate skills from commands + ship a split knowledge base + an installer that uses `specify` with a file fallback**
+1. **Generate skills from commands + ship a split knowledge base + a `specify`-driven installer (one-line `curl … | bash`)**
 2. **Author skills by hand alongside commands** (two parallel sources)
 3. **Rely solely on `specify init --integration-options="--skills"`** to derive skills at init time
 
@@ -76,19 +76,20 @@ installable into a target project via the `specify` CLI (with a fallback when
   `.specify/memory/knowledge/`.
 - `extension.yml` declares commands, skills, knowledge, and templates so
   `specify extension add` can register the toolkit.
-- `install.sh` is the self-propelled installer: it copies the prebuilt commands,
-  skills, knowledge, templates, and scripts into a target project (any of five
-  agents), and with `--with-specify` also registers the preset through the CLI.
-  It works with **or without** `specify` installed.
+- `install.sh` is the self-propelled installer, driven **exclusively by the
+  `specify` CLI**: it ensures `uv` + `specify` are present, obtains the toolkit
+  (local checkout or a shallow clone), and installs it with `specify preset add`
+  + `specify extension add` (commands + skills + knowledge from `extension.yml`)
+  for any of five agents. It is published as a one-line `curl … | bash` command.
 - The repo dogfoods itself: `.claude/skills → ../skills` and
   `.specify/memory/knowledge → ../../knowledge` symlinks.
 
 ### Confirmation
 
 - `python3 scripts/build-skills.py --check` is green (skills match commands).
-- `./install.sh --target <tmp> --dry-run` lists exactly the expected artifacts;
-  a real install into a clean directory produces 13 commands, 13 skills, and the
-  knowledge base under `.specify/memory/knowledge/`.
+- `./install.sh --dry-run` (and the piped `curl … | bash -s -- --dry-run`) prints
+  exactly the `specify preset add` / `specify extension add` invocations for both
+  the local-checkout and clone code paths; `shellcheck` is clean.
 - The `audit:` block on this ADR asserts every `skills/**/SKILL.md` declares a
   `name`.
 
@@ -98,7 +99,7 @@ installable into a target project via the `specify` CLI (with a fallback when
 
 - One edit to a command (or the knowledge map) regenerates the matching skill.
 - Agents pull in only the knowledge slice a task needs — small context, high signal.
-- The toolkit installs into any project, with or without the `specify` CLI.
+- The toolkit installs into any project with a single `curl … | bash` line.
 
 ### Negative
 
@@ -111,10 +112,10 @@ installable into a target project via the `specify` CLI (with a fallback when
 
 ## Pros and Cons of the Options
 
-### Generate skills + split knowledge + installer
+### Generate skills + split knowledge + specify-driven installer
 
-**Pros**: single source of truth; progressive disclosure; CLI-optional install.
-**Cons**: a build step and a committed generated tree.
+**Pros**: single source of truth; progressive disclosure; one-line `specify` install.
+**Cons**: a build step and a committed generated tree; install requires the `specify` CLI (auto-installed via uv).
 
 ### Hand-author skills alongside commands
 

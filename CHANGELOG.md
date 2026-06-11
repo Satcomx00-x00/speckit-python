@@ -40,10 +40,11 @@ All notable changes to this project are documented here. The format follows
 - **Knowledge base** (`knowledge/`) — the constitution split into 11
   deep-reference topics with directives and Do/Don't code patterns; every code
   sample passes `mypy --strict` and `ruff`.
-- **Self-propelled install** — `install.sh` deploys commands, skills, knowledge,
-  templates, and scripts into any target project (claude/copilot/gemini/codex/
-  cursor), with or without the `specify` CLI; `extension.yml` declares the
-  toolkit as a spec-kit extension.
+- **Self-propelled install** — a one-line `curl … | bash` runs `install.sh`,
+  which installs the toolkit using **only the `specify` CLI** (`specify preset
+  add` + `specify extension add`, auto-installing `uv`/`specify` if missing) for
+  any agent (claude/copilot/gemini/codex/cursor); `extension.yml` declares the
+  commands, skills, and knowledge base.
 - **ADR-0002** recording the skills + knowledge + self-propelled-install
   architecture. The repo dogfoods itself via `.claude/skills` and
   `.specify/memory/knowledge` symlinks.
