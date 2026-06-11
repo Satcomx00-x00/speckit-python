@@ -1,0 +1,122 @@
+schema_version: "1.0"
+
+extension:
+  id: python
+  name: "Python Spec Kit"
+  version: "0.1.0"
+  description: "Self-contained, state-of-the-art Spec-Driven Development for any Python project: a phased constitution, 13 commands, 13 agentskills.io skills, and an 11-topic knowledge base — enforcing uv + Ruff + mypy --strict + pytest."
+  author: "Satcomx00-x00"
+  repository: "https://github.com/Satcomx00-x00/speckit-python"
+  license: "MIT"
+
+requires:
+  speckit_version: ">=0.6.0"
+  tools:
+    - name: uv
+      required: false
+
+provides:
+  # Slash-command prompt files (installed to <agent>/commands or .claude/commands).
+  commands:
+    - name: speckit.adr.audit
+      file: presets/python/commands/speckit.adr.audit.md
+      description: "Audit the codebase against accepted ADRs. For each ADR, surface code patterns that contradict the decision and code patterns the ADR mandates but cannot be foun"
+    - name: speckit.adr.new
+      file: presets/python/commands/speckit.adr.new.md
+      description: "Scaffold a new Architecture Decision Record using MADR 4 (full) format at docs/adr/. Auto-numbers, links to the current commit, prompts for status, drivers, opt"
+    - name: speckit.adr.supersede
+      file: presets/python/commands/speckit.adr.supersede.md
+      description: "Mark an existing ADR as superseded and scaffold its replacement. Preserves the audit trail — the old ADR keeps its content, gains a `superseded_by` link, and th"
+    - name: speckit.audit.deep
+      file: presets/python/commands/speckit.audit.deep.md
+      description: "Deep codebase audit. Runs the regex-based audit script, then layers in ruff check, ruff format --check, mypy --strict, pytest, and pip-audit, plus file-level re"
+    - name: speckit.audit
+      file: presets/python/commands/speckit.audit.md
+      description: "Audit the codebase against the Python behavioral directives in the constitution. Runs the audit script, persists the JSON, summarizes findings by severity and s"
+    - name: speckit.constitution.scan
+      file: presets/python/commands/speckit.constitution.scan.md
+      description: "Scan the repository (Markdown docs, pyproject.toml, tooling config, src layout, async/typing signals, CI) and export a properly-structured Python project consti"
+    - name: speckit.context.refresh
+      file: presets/python/commands/speckit.context.refresh.md
+      description: "Regenerate `.specify/memory/context-pack.md` — the one-page snapshot every new AI session reads first. Aggregates the ADR index, accepted/proposed ADRs, in-flig"
+    - name: speckit.docs.sync
+      file: presets/python/commands/speckit.docs.sync.md
+      description: "Sync agent context files (AGENTS.md, CLAUDE.md, .github/copilot-instructions.md, GEMINI.md) from the installed agent-context.md template. Shows a diff for revie"
+    - name: speckit.feature
+      file: presets/python/commands/speckit.feature.md
+      description: "Stack-agnostic, end-to-end Python feature scaffold. FIRST runs an interactive clarification round (up to 5 high-impact questions, each with a recommended defaul"
+    - name: speckit.help
+      file: presets/python/commands/speckit.help.md
+      description: "List every command in the Python spec-kit preset grouped by phase of use, with one-line descriptions and a state-aware \"suggested next\" line. Read this when you"
+    - name: speckit.plan
+      file: presets/python/commands/speckit.plan.md
+      description: "Python-specialized feature planning. Decomposes a feature into typed boundary contracts, domain models, repository/persistence seams, pure services, the interfa"
+    - name: speckit.scaffold.module
+      file: presets/python/commands/speckit.scaffold.module.md
+      description: "Scaffold a single state-of-the-art Python module set for one entity: contracts (parse-don't-validate), domain model (branded ids, pure transitions), a repositor"
+    - name: speckit.tasks
+      file: presets/python/commands/speckit.tasks.md
+      description: "Python-shaped task generation. Converts a feature plan into a dependency-ordered task list — contracts first, then domain, repository, service, surface, wiring,"
+
+  # Agent skills (agentskills.io). Installed to <agent>/skills/<id>/SKILL.md.
+  skills:
+    - id: speckit-adr-audit
+      file: skills/speckit-adr-audit/SKILL.md
+    - id: speckit-adr-new
+      file: skills/speckit-adr-new/SKILL.md
+    - id: speckit-adr-supersede
+      file: skills/speckit-adr-supersede/SKILL.md
+    - id: speckit-audit
+      file: skills/speckit-audit/SKILL.md
+    - id: speckit-audit-deep
+      file: skills/speckit-audit-deep/SKILL.md
+    - id: speckit-constitution-scan
+      file: skills/speckit-constitution-scan/SKILL.md
+    - id: speckit-context-refresh
+      file: skills/speckit-context-refresh/SKILL.md
+    - id: speckit-docs-sync
+      file: skills/speckit-docs-sync/SKILL.md
+    - id: speckit-feature
+      file: skills/speckit-feature/SKILL.md
+    - id: speckit-help
+      file: skills/speckit-help/SKILL.md
+    - id: speckit-plan
+      file: skills/speckit-plan/SKILL.md
+    - id: speckit-scaffold-module
+      file: skills/speckit-scaffold-module/SKILL.md
+    - id: speckit-tasks
+      file: skills/speckit-tasks/SKILL.md
+
+  # Knowledge base — deep reference docs loaded on demand (progressive disclosure).
+  knowledge:
+    install_to: ".specify/memory/knowledge"
+    files:
+      - knowledge/README.md
+      - knowledge/architecture.md
+      - knowledge/code-quality.md
+      - knowledge/concurrency.md
+      - knowledge/data-and-boundaries.md
+      - knowledge/error-handling.md
+      - knowledge/observability.md
+      - knowledge/packaging.md
+      - knowledge/performance.md
+      - knowledge/security.md
+      - knowledge/testing.md
+      - knowledge/type-safety.md
+
+  templates:
+    - name: constitution-template
+      file: presets/python/templates/constitution-template.md
+      replaces: constitution-template
+    - name: agent-context
+      file: presets/python/templates/agent-context.md
+
+tags:
+  - "python"
+  - "skills"
+  - "knowledge"
+  - "mypy"
+  - "ruff"
+  - "uv"
+  - "pytest"
+  - "sdd"

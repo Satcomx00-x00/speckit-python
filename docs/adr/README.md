@@ -27,3 +27,4 @@ forward by default.
 | ID | Title | Status | Phase | Criticality | Date |
 |---|---|---|---|---|---|
 | [0001](./0001-adopt-spec-driven-development-for-python.md) | Adopt Spec-Driven Development for Python with a strict toolchain | accepted | P1 | Critical | 2026-06-11 |
+| [0002](./0002-ship-skills-and-knowledge-base-self-propelled.md) | Ship agent skills and a knowledge base inside the repo, installable via specify | accepted | P1 | High | 2026-06-11 |

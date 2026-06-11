@@ -33,3 +33,17 @@ All notable changes to this project are documented here. The format follows
 - **Canonical `pyproject.toml`** configuring Ruff, mypy `--strict`, and pytest.
 - This repository's own filled constitution at
   `.specify/memory/constitution.md` (phase P1).
+- **Agent skills** (`skills/speckit-*/SKILL.md`) in
+  [agentskills.io](https://agentskills.io) format — auto-discovered capabilities
+  generated from the commands by `scripts/build-skills.py` (with a `--check`
+  drift guard), each linking the relevant knowledge-base topics.
+- **Knowledge base** (`knowledge/`) — the constitution split into 11
+  deep-reference topics with directives and Do/Don't code patterns; every code
+  sample passes `mypy --strict` and `ruff`.
+- **Self-propelled install** — `install.sh` deploys commands, skills, knowledge,
+  templates, and scripts into any target project (claude/copilot/gemini/codex/
+  cursor), with or without the `specify` CLI; `extension.yml` declares the
+  toolkit as a spec-kit extension.
+- **ADR-0002** recording the skills + knowledge + self-propelled-install
+  architecture. The repo dogfoods itself via `.claude/skills` and
+  `.specify/memory/knowledge` symlinks.

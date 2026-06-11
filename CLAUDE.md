@@ -33,6 +33,20 @@ dash form Claude Code expects:
 The portable spec-kit form (`/speckit.feature`, etc.) lives in
 `presets/python/commands/` for installation into other agents and projects.
 
+## Skills & knowledge base
+
+Each command also exists as an auto-discovered **skill** at
+`skills/speckit-*/SKILL.md` (generated from the commands by
+`scripts/build-skills.py` — edit the command, then run the generator; CI checks
+`--check`). Skills reference the **knowledge base** at `knowledge/` (installed to
+`.specify/memory/knowledge/`), which splits the constitution into deep,
+load-on-demand topic references (`type-safety.md`, `security.md`, `testing.md`,
+…). When you need depth on a topic, read just that file — don't load them all.
+
+The toolkit installs into other projects via `./install.sh` (and is declared in
+`extension.yml` for `specify extension add`). This repo dogfoods itself through
+the `.claude/skills` and `.specify/memory/knowledge` symlinks.
+
 ## Working in this repo
 
 - Command specs are Markdown with YAML front-matter under `presets/python/commands/`.

@@ -85,6 +85,32 @@ tests/…         → deterministic pytest unit tests, zero mocks
 
 Every file is typed, Ruff-clean, and traceable to a constitution directive.
 
+## Skills & the knowledge base
+
+The toolkit is **self-propelled** — it carries everything it needs to install itself into another project:
+
+- **Skills** (`skills/speckit-*/SKILL.md`) — [agentskills.io](https://agentskills.io)-format capabilities that agents auto-discover by `name` + `description` (no slash required). They are **generated from the commands** by `scripts/build-skills.py`, so the commands stay the single source of truth (`python3 scripts/build-skills.py --check` guards drift in CI).
+- **Knowledge base** (`knowledge/`) — the constitution split into 11 deep-reference topics (`type-safety`, `security`, `testing`, `architecture`, …), each with directives plus Do/Don't code patterns. Every code sample passes `mypy --strict` and `ruff`. Skills link to its installed location (`.specify/memory/knowledge/`) and load **only the slice a task needs** (progressive disclosure — zero context cost until read).
+
+This gives every capability **two surfaces**: an explicit slash command (`/speckit-feature`) and an auto-discovered skill (`speckit-feature`), both backed by the same knowledge base.
+
+## Install into another project (self-propelled)
+
+The repo ships prebuilt artifacts and an installer that works **with or without** the `specify` CLI:
+
+```bash
+# Pure file install (no dependency) — pick your agent:
+./install.sh --target /path/to/project --agent claude     # or copilot | gemini | codex | cursor
+
+# Preview first:
+./install.sh --target /path/to/project --dry-run
+
+# Also register the preset through the spec-kit CLI when it's available:
+./install.sh --target /path/to/project --with-specify
+```
+
+This deploys the commands, skills, knowledge base, templates, and audit scripts into the target. The toolkit is also declared as a spec-kit extension in `extension.yml` (`specify extension add`) and as a preset in `presets/python/preset.yml` (`specify preset add --dev ./presets/python`).
+
 ## Quickstart
 
 ```bash
@@ -110,18 +136,26 @@ uv run ruff check && uv run mypy --strict src && uv run pytest
 
 ```
 .
-├── .claude/commands/            # dash-form commands, ready for Claude Code
+├── .claude/
+│   ├── commands/                # dash-form commands, ready for Claude Code
+│   └── skills/  -> ../skills    # dogfood: this repo uses its own skills
 ├── .specify/memory/
-│   └── constitution.md          # this repo's filled, phased constitution
+│   ├── constitution.md          # this repo's filled, phased constitution
+│   └── knowledge/ -> ../../knowledge   # dogfood: the knowledge base in place
+├── skills/                      # agentskills.io SKILL.md (generated from commands)
+│   └── speckit-*/SKILL.md
+├── knowledge/                   # the knowledge base — 11 deep-reference topics
+│   ├── README.md  ·  type-safety.md  ·  security.md  ·  testing.md  · …
 ├── docs/adr/                    # Architecture Decision Records (MADR 4) + index
-│   ├── 0000-template.md
-│   └── 0001-adopt-spec-driven-development-for-python.md
 ├── presets/python/              # the portable Python preset
 │   ├── preset.yml               # preset manifest (templates + commands)
 │   ├── templates/               # constitution-template.md, agent-context.md
 │   ├── commands/                # speckit.*.md command specs (spec-kit form)
 │   └── scripts/                 # scan-repo.sh, audit-codebase.sh, SCHEMA.md
+├── scripts/build-skills.py      # regenerates skills/ from the commands + knowledge map
 ├── workflows/python-feature/    # end-to-end feature delivery workflow
+├── extension.yml                # spec-kit extension manifest (commands+skills+knowledge)
+├── install.sh                   # self-propelled installer (specify-aware, file fallback)
 ├── pyproject.toml               # canonical uv + Ruff + mypy(strict) + pytest config
 ├── AGENTS.md  ·  CLAUDE.md      # always-on agent operating rules
 └── preset.yml                   # active preset manifest (root)
