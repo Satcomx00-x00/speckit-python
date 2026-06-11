@@ -1,0 +1,254 @@
+schema_version: "1.0"
+
+workflow:
+  id: "python-feature"
+  name: "Python Feature Delivery Cycle"
+  version: "1.0.0"
+  author: "speckit-python"
+  description: >-
+    Production-grade, stack-agnostic feature delivery for a Python project
+    (API, CLI, library, or worker — no web stack hardcoded). Drives the full
+    cycle: scope/spec → clarify → plan → tasks → scaffold typed slice →
+    quality gates (ruff + mypy --strict + pytest, run via uv) → audit →
+    record an ADR if a decision was made → ship gate. Every generated layer
+    is mypy --strict clean, Ruff-clean, and constitution-compliant.
+
+requires:
+  speckit_version: ">=0.7.2"
+  integrations:
+    any: ["claude", "copilot", "gemini"]
+
+inputs:
+  feature_name:
+    type: string
+    required: true
+    prompt: "Feature slug (kebab-case or snake_case, e.g. 'invoice_export')"
+
+  feature_description:
+    type: string
+    required: true
+    prompt: "One-line description of what the feature does"
+
+  integration:
+    type: string
+    default: "claude"
+    prompt: "AI coding integration to use (claude, copilot, gemini)"
+
+  surface:
+    type: string
+    default: "lib"
+    enum: ["api", "cli", "lib", "worker"]
+    prompt: "Interface surface: api (route) · cli (command) · lib (function) · worker (task)"
+
+  package_root:
+    type: string
+    default: "src"
+    prompt: "Source package root (e.g. 'src' or the flat package directory)"
+
+  io_style:
+    type: string
+    default: "sync"
+    enum: ["async", "sync"]
+    prompt: "I/O style for the feature (async or sync)"
+
+  validation_lib:
+    type: string
+    default: "pydantic"
+    enum: ["pydantic", "dataclass", "attrs"]
+    prompt: "Boundary validation library (pydantic, dataclass, attrs)"
+
+  needs_adr:
+    type: boolean
+    default: true
+    prompt: "Record an ADR if an architectural decision is made?"
+
+  run_quality_gates:
+    type: boolean
+    default: true
+    prompt: "Run the ruff + mypy --strict + pytest quality gates?"
+
+steps:
+  # ──────────────────────────────────────────────────────────────────
+  # PHASE 0 — Scope / spec
+  # ──────────────────────────────────────────────────────────────────
+  - id: scope
+    command: speckit.constitution.scan
+    integration: "{{ inputs.integration }}"
+    input:
+      args: |
+        Feature: {{ inputs.feature_name }}
+        Description: {{ inputs.feature_description }}
+
+        Scan the constitution and produce the scope for this feature:
+        - User story / use case (who, what, why)
+        - Binary acceptance criteria (verifiable yes/no)
+        - Surface: {{ inputs.surface }} (api | cli | lib | worker)
+        - Entities, fields and their precise types; identity and invariants
+        - Operations (create/read/update/list/delete/compute)
+        - Non-goals (explicitly out of scope)
+        - Error cases the caller must handle
+        - I/O style: {{ inputs.io_style }}; validation: {{ inputs.validation_lib }}
+        - Edge cases (empty/oversized input, conflicts, timeouts, Unicode)
+
+  - id: review-scope
+    type: gate
+    message: |
+      Review the feature scope before clarifying and planning.
+      Check: binary acceptance criteria, entity/fields typed, surface correct,
+      non-goals listed, error cases enumerated.
+    options: [approve, reject]
+    on_reject: abort
+
+  # ──────────────────────────────────────────────────────────────────
+  # PHASE 1 — Clarify (resolve ambiguity before planning)
+  # ──────────────────────────────────────────────────────────────────
+  - id: clarify
+    command: speckit.clarify-equivalent
+    integration: "{{ inputs.integration }}"
+    input:
+      args: |
+        Run a clarification round for "{{ inputs.feature_name }}" — up to 5
+        high-impact questions, each with a recommended default, covering only
+        ambiguities that materially change the data model, layer boundaries,
+        error taxonomy, test design, or security posture. Bind the answers
+        into a Feature Decision Record:
+        - Surface: {{ inputs.surface }}
+        - I/O style: {{ inputs.io_style }}
+        - Validation: {{ inputs.validation_lib }}
+        - Package root: {{ inputs.package_root }}
+
+  # ──────────────────────────────────────────────────────────────────
+  # PHASE 2 — Plan (layered design)
+  # ──────────────────────────────────────────────────────────────────
+  - id: plan
+    command: speckit.plan
+    integration: "{{ inputs.integration }}"
+    input:
+      args: |
+        Produce a full implementation plan for "{{ inputs.feature_name }}":
+        - Module map under {{ inputs.package_root }}/{{ inputs.feature_name }}/
+          (contracts → models → repository → service → interface surface)
+        - Layer boundaries and data flow (parse-don't-validate at the edge,
+          domain model distinct from wire/persistence shapes)
+        - Error taxonomy (typed Result vs exception hierarchy)
+        - Surface: {{ inputs.surface }}; I/O: {{ inputs.io_style }};
+          validation: {{ inputs.validation_lib }}
+        - Testing plan (pure unit tests, boundary tests, integration where applicable)
+
+  - id: review-plan
+    type: gate
+    message: "Review the implementation plan before generating tasks."
+    options: [approve, reject]
+    on_reject: abort
+
+  # ──────────────────────────────────────────────────────────────────
+  # PHASE 3 — Tasks (executable breakdown)
+  # ──────────────────────────────────────────────────────────────────
+  - id: tasks
+    command: speckit.tasks
+    integration: "{{ inputs.integration }}"
+    input:
+      args: |
+        Break the plan for "{{ inputs.feature_name }}" into ordered, verifiable
+        tasks across the layered slice (contracts, models, repository Protocol +
+        adapter, service, {{ inputs.surface }} surface, wiring, tests). Each
+        task must be independently checkable and mypy --strict clean.
+
+  # ──────────────────────────────────────────────────────────────────
+  # PHASE 4 — Scaffold the typed slice
+  # ──────────────────────────────────────────────────────────────────
+  - id: scaffold
+    command: speckit.feature
+    integration: "{{ inputs.integration }}"
+    input:
+      args: >-
+        {{ inputs.feature_name }}
+        --description "{{ inputs.feature_description }}"
+        --surface {{ inputs.surface }}
+        --package {{ inputs.package_root }}
+        --{{ inputs.io_style }}
+        --validation {{ inputs.validation_lib }}
+        --no-clarify
+
+  # ──────────────────────────────────────────────────────────────────
+  # PHASE 5 — Quality gates (uv → ruff + mypy --strict + pytest)
+  # ──────────────────────────────────────────────────────────────────
+  - id: quality-gates
+    type: if
+    condition: "{{ inputs.run_quality_gates == true }}"
+    then:
+      - id: ruff-check
+        type: shell
+        run: "uv run ruff check {{ inputs.package_root }}"
+
+      - id: ruff-format-check
+        type: shell
+        run: "uv run ruff format --check {{ inputs.package_root }}"
+
+      - id: mypy-strict
+        type: shell
+        run: "uv run mypy --strict {{ inputs.package_root }}"
+
+      - id: pytest
+        type: shell
+        run: "uv run pytest -q"
+
+      - id: review-quality
+        type: gate
+        message: |
+          Quality gates ran (ruff check, ruff format --check,
+          mypy --strict, pytest). All must be clean/green to proceed.
+          Fix any failure and resume before continuing.
+        options: [approve, reject]
+        on_reject: abort
+
+  # ──────────────────────────────────────────────────────────────────
+  # PHASE 6 — Audit against the constitution
+  # ──────────────────────────────────────────────────────────────────
+  - id: audit
+    command: speckit.audit
+    integration: "{{ inputs.integration }}"
+    input:
+      args: >-
+        Audit the scaffolded "{{ inputs.feature_name }}" feature against the
+        constitution's type-safety, security, and architecture directives:
+        no Any in signatures, no bare type: ignore, no direct datetime.now()/
+        uuid4()/random or DB driver import inside service.py, no string-built
+        SQL or shell=True, boundary models reject unknown keys, and the surface
+        returns DTOs (never the domain or persistence model).
+
+  # ──────────────────────────────────────────────────────────────────
+  # PHASE 7 — Record an ADR (only when a decision was made)
+  # ──────────────────────────────────────────────────────────────────
+  - id: adr
+    type: if
+    condition: "{{ inputs.needs_adr == true }}"
+    then:
+      - id: record-adr
+        command: speckit.adr.new
+        integration: "{{ inputs.integration }}"
+        input:
+          args: >-
+            Record the key architectural decision made while scaffolding
+            "{{ inputs.feature_name }}" (e.g. surface choice, {{ inputs.io_style }}
+            I/O, {{ inputs.validation_lib }} validation, error style, persistence
+            seam) as an ADR — context, decision, alternatives considered,
+            consequences.
+
+  # ──────────────────────────────────────────────────────────────────
+  # PHASE 8 — Ship gate
+  # ──────────────────────────────────────────────────────────────────
+  - id: ship
+    type: gate
+    message: |
+      Ship "{{ inputs.feature_name }}".
+      Final pre-ship checklist:
+      - ruff format --check && ruff check clean
+      - mypy --strict {{ inputs.package_root }} clean
+      - pytest green
+      - Public API re-exported intentionally; internals not leaked
+      - Errors mapped to correct status/exit codes
+      - CHANGELOG updated; ADR recorded if a decision was made
+      - uv.lock updated if dependencies changed
+    options: [approve, reject]
+    on_reject: abort
