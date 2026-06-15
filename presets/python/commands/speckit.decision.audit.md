@@ -23,7 +23,7 @@ Parse from `$ARGUMENTS`:
 
 Check for `.specify/extensions.yml`. Look for hooks under `hooks.before_audit`. Apply standard hook-processing.
 
-Verify `docs/adr/` exists. If not, abort with: `No ADRs found. Run /speckit.adr.new first.`
+Verify `docs/adr/` exists. If not, abort with: `No ADRs found. Run /speckit.decision.new first.`
 
 Verify `.specify/memory/constitution.md` exists. If not, warn: `No constitution found; criticality phase-gating will fall back to the ADR's own criticality field.`
 

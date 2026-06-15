@@ -67,18 +67,18 @@ provides:
       description: "Deep audit: runs the regex audit, then layers ruff check, ruff format --check, mypy --strict, pytest, and pip-audit, plus LLM file-level confirmation and cross-file pattern analysis."
 
     - type: "command"
-      name: "speckit.adr.new"
-      file: "commands/speckit.adr.new.md"
+      name: "speckit.decision.new"
+      file: "commands/speckit.decision.new.md"
       description: "Scaffold a new Architecture Decision Record at docs/adr/ in MADR 4 (full) format. Auto-numbers, links the current commit, supports --supersedes, and updates the ADR index."
 
     - type: "command"
-      name: "speckit.adr.supersede"
-      file: "commands/speckit.adr.supersede.md"
+      name: "speckit.decision.supersede"
+      file: "commands/speckit.decision.supersede.md"
       description: "Mark an existing ADR as superseded and scaffold its replacement. Preserves the audit trail and carries constitution_refs over by default."
 
     - type: "command"
-      name: "speckit.adr.audit"
-      file: "commands/speckit.adr.audit.md"
+      name: "speckit.decision.audit"
+      file: "commands/speckit.decision.audit.md"
       description: "Audit the codebase against accepted ADRs' forbid/require/prefer rules. Honors the central waiver registry at .specify/waivers.yml, phase-gates findings, and surfaces ADRs without an audit block as aspirational."
 
     - type: "command"

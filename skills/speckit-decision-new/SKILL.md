@@ -1,12 +1,12 @@
 ---
-name: speckit-adr-new
-description: "Scaffold a new Architecture Decision Record using MADR 4 (full) format at docs/adr/. Auto-numbers, links to the current commit, prompts for status, drivers, options, and consequences. The ADR becomes part of the project's durable memory — read by /speckit.context.refresh and enforced by /speckit.adr.audit. Use when the user makes an architectural decision worth recording."
+name: speckit-decision-new
+description: "Scaffold a new Architecture Decision Record using MADR 4 (full) format at docs/adr/. Auto-numbers, links to the current commit, prompts for status, drivers, options, and consequences. The ADR becomes part of the project's durable memory — read by /speckit.context.refresh and enforced by /speckit.decision.audit. Use when the user makes an architectural decision worth recording."
 ---
 
-# Speckit ADR New
+# Speckit Decision New
 
 > This skill is generated from the Python preset command
-> `presets/python/commands/speckit.adr.new.md` by `scripts/build-skills.py`.
+> `presets/python/commands/speckit.decision.new.md` by `scripts/build-skills.py`.
 > Edit the command (or the knowledge map in the generator), then regenerate.
 
 ## User Input
@@ -31,7 +31,7 @@ If the title is missing, ask for it before proceeding.
 
 ## Pre-Execution Checks
 
-Check for `.specify/extensions.yml`. Look for hooks under `hooks.before_adr`. Apply standard hook-processing.
+Check for `.specify/extensions.yml`. Look for hooks under `hooks.before_decision`. Apply standard hook-processing.
 
 Verify `.specify/memory/constitution.md` exists. If not, abort with: `No constitution found. Run /speckit-constitution-scan first — ADRs reference constitution directives.`
 
@@ -212,7 +212,7 @@ ADR supersedes another, also update the superseded row's `Status` column.
 
 **Next steps**:
 - Fill in the Context, Decision, and Consequences sections — the template
-  has placeholders that /speckit-adr-audit will flag if left as TODOs.
+  has placeholders that /speckit-decision-audit will flag if left as TODOs.
 - If status is `proposed`, open an RFC or discussion to socialize it before
   changing to `accepted`.
 - Once `accepted`, run /speckit-context-refresh to surface it in
@@ -220,7 +220,7 @@ ADR supersedes another, also update the superseded row's `Status` column.
 - If the decision changes a Critical directive, run /speckit-constitution-scan
   to refresh the constitution's Sync Impact Report.
 
-**Audit check**: /speckit-adr-audit will scan code for patterns that
+**Audit check**: /speckit-decision-audit will scan code for patterns that
 contradict accepted ADRs. Run it after implementing the decision to verify
 the codebase reflects the ADR.
 ```
@@ -234,7 +234,7 @@ the codebase reflects the ADR.
 
 ## Post-Execution Hooks
 
-Check `.specify/extensions.yml` for `hooks.after_adr`. Apply standard hook-processing.
+Check `.specify/extensions.yml` for `hooks.after_decision`. Apply standard hook-processing.
 
 ---
 

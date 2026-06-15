@@ -1,4 +1,4 @@
-# Central waiver registry for /speckit.adr.audit and /speckit.audit.
+# Central waiver registry for /speckit.decision.audit and /speckit.audit.
 #
 # A waiver temporarily suppresses a specific finding. Critical and High waivers
 # MUST carry an owner, a reason, and an expiry no further than one release

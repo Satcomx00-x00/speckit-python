@@ -20,8 +20,8 @@ All notable changes to this project are documented here. The format follows
   - `/speckit.feature` — clarify-first, layered, typed feature scaffold.
   - `/speckit.constitution.scan`, `/speckit.plan`, `/speckit.tasks`,
     `/speckit.scaffold.module`.
-  - `/speckit.audit`, `/speckit.audit.deep`, `/speckit.adr.audit`.
-  - `/speckit.adr.new`, `/speckit.adr.supersede`, `/speckit.context.refresh`,
+  - `/speckit.audit`, `/speckit.audit.deep`, `/speckit.decision.audit`.
+  - `/speckit.decision.new`, `/speckit.decision.supersede`, `/speckit.context.refresh`,
     `/speckit.docs.sync`, `/speckit.help`.
 - **Audit tooling** (`presets/python/scripts/bash/`) — `scan-repo.sh` repository
   inventory and `audit-codebase.sh` rule-based engine, with a stable JSON

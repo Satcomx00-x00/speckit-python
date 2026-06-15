@@ -14,7 +14,7 @@ constitution_refs:
   - <directive-id>   # e.g. SEC.SQL.string-sql, TYPE.ANY.any-annotation
 tags:
   - <tag>
-# Optional: enforce this decision in code via /speckit.adr.audit
+# Optional: enforce this decision in code via /speckit.decision.audit
 # audit:
 #   forbid:
 #     - pattern: "pickle\\.loads?\\("

@@ -531,7 +531,7 @@ Also generate `tests/<feature>/test_contracts.py` (boundary validation: rejects 
 [ ] Public API re-exported intentionally; internals not leaked
 [ ] New config registered in the typed settings model; secrets via secret manager
 [ ] Errors mapped to correct status/exit codes; no internals leaked to callers
-[ ] CHANGELOG updated; ADR recorded if an architectural decision was made (/speckit-adr-new)
+[ ] CHANGELOG updated; ADR recorded if an architectural decision was made (/speckit-decision-new)
 [ ] uv.lock updated if dependencies changed
 ```
 
@@ -569,7 +569,7 @@ Print the scaffold summary:
 **Next steps**:
   - /speckit-plan <feature>        for a full implementation plan
   - /speckit-scaffold-module       to add another typed module
-  - /speckit-adr-new <decision>    to record an architectural decision
+  - /speckit-decision-new <decision>    to record an architectural decision
   - /speckit-audit                 to verify constitution compliance
 ```
 

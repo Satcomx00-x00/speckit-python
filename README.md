@@ -73,12 +73,12 @@ flowchart TD
 
     subgraph MEM["3 · Decision memory"]
         direction TB
-        ADRnew["/speckit-adr-new"] --> ADRsup["/speckit-adr-supersede"]
+        ADRnew["/speckit-decision-new"] --> ADRsup["/speckit-decision-supersede"]
     end
 
     subgraph QA["4 · Quality gates"]
         direction TB
-        Audit["/speckit-audit"] --> ADRaudit["/speckit-adr-audit"] --> Deep["/speckit-audit-deep"]
+        Audit["/speckit-audit"] --> ADRaudit["/speckit-decision-audit"] --> Deep["/speckit-audit-deep"]
     end
 
     Ctx --> Plan
@@ -104,9 +104,9 @@ flowchart TD
 | | `/speckit-scaffold-module` | Scaffold one typed module: contracts → domain → repository → service → tests |
 | **Quality** | `/speckit-audit` | Audit the code against the constitution (regex rules) |
 | | `/speckit-audit-deep` | Audit + `ruff` + `mypy --strict` + `pytest` + `pip-audit` + cross-file analysis |
-| | `/speckit-adr-audit` | Check the code against accepted ADRs' forbid/require/prefer rules |
-| **Decision memory** | `/speckit-adr-new` | Record a decision as a MADR 4 ADR under `docs/adr/` |
-| | `/speckit-adr-supersede` | Replace an ADR, preserving the audit trail |
+| | `/speckit-decision-audit` | Check the code against accepted ADRs' forbid/require/prefer rules |
+| **Decision memory** | `/speckit-decision-new` | Record a decision as a MADR 4 ADR under `docs/adr/` |
+| | `/speckit-decision-supersede` | Replace an ADR, preserving the audit trail |
 | | `/speckit-context-refresh` | Regenerate the one-page context pack the next session reads first |
 | **Help** | `/speckit-help` | List commands by phase with a state-aware "suggested next" |
 
@@ -172,7 +172,7 @@ Spec-Driven Development inverts AI coding: the **specification is the source of
 truth**, and the constitution makes "good Python" *machine-checkable* rather than
 aspirational. mypy `--strict` proves type-safety, Ruff proves style and catches
 security smells, uv proves reproducibility, pytest proves behavior — so
-`/speckit-audit` and `/speckit-adr-audit` enforce the standard mechanically on
+`/speckit-audit` and `/speckit-decision-audit` enforce the standard mechanically on
 every change. The full directive lives in
 [`presets/python/templates/constitution-template.md`](./presets/python/templates/constitution-template.md);
 the rationale is recorded in [`docs/adr/`](./docs/adr/).

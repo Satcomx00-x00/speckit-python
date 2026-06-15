@@ -80,7 +80,7 @@ the same commands. (Full directives: `.specify/memory/constitution.md`.)
 ## Accepted Architecture Decisions
 
 The decisions below are binding. Code that contradicts them is a finding
-(see `/speckit-adr-audit`).
+(see `/speckit-decision-audit`).
 
 | ID | Title | Phase | Criticality | Date |
 |---|---|---|---|---|
@@ -153,7 +153,7 @@ when any are non-empty:
 ## Drift signals
 
 - 2 ADRs accepted in the last 30 days lack an `audit:` block — they are
-  enforced only by convention. Run /speckit-adr-audit and add rules.
+  enforced only by convention. Run /speckit-decision-audit and add rules.
 - The constitution was last amended 124 days ago — consider re-running
   /speckit-constitution-scan.
 - 3 feature plans have been in-flight for > 30 days. Stale plans become
@@ -177,7 +177,7 @@ Drift signals are advisory; they do not affect exit code.
 **Next steps**:
 - Reference this file at the top of CLAUDE.md / AGENTS.md / copilot-instructions
   so every new session picks it up automatically (see /speckit-docs-sync).
-- Regenerate after any of: /speckit-adr-new, /speckit-adr-supersede,
+- Regenerate after any of: /speckit-decision-new, /speckit-decision-supersede,
   /speckit-constitution-scan, CHANGELOG edits.
 - Drift signals above are not auto-fixed — handle them explicitly.
 ```

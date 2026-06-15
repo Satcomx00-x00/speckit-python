@@ -16,17 +16,7 @@ requires:
       required: false
 
 provides:
-  # Slash-command prompt files (installed to <agent>/commands or .claude/commands).
   commands:
-    - name: speckit.adr.audit
-      file: presets/python/commands/speckit.adr.audit.md
-      description: "Audit the codebase against accepted ADRs. For each ADR, surface code patterns that contradict the decision and code patterns the ADR mandates but cannot be foun"
-    - name: speckit.adr.new
-      file: presets/python/commands/speckit.adr.new.md
-      description: "Scaffold a new Architecture Decision Record using MADR 4 (full) format at docs/adr/. Auto-numbers, links to the current commit, prompts for status, drivers, opt"
-    - name: speckit.adr.supersede
-      file: presets/python/commands/speckit.adr.supersede.md
-      description: "Mark an existing ADR as superseded and scaffold its replacement. Preserves the audit trail — the old ADR keeps its content, gains a `superseded_by` link, and th"
     - name: speckit.audit.deep
       file: presets/python/commands/speckit.audit.deep.md
       description: "Deep codebase audit. Runs the regex-based audit script, then layers in ruff check, ruff format --check, mypy --strict, pytest, and pip-audit, plus file-level re"
@@ -39,6 +29,15 @@ provides:
     - name: speckit.context.refresh
       file: presets/python/commands/speckit.context.refresh.md
       description: "Regenerate `.specify/memory/context-pack.md` — the one-page snapshot every new AI session reads first. Aggregates the ADR index, accepted/proposed ADRs, in-flig"
+    - name: speckit.decision.audit
+      file: presets/python/commands/speckit.decision.audit.md
+      description: "Audit the codebase against accepted ADRs. For each ADR, surface code patterns that contradict the decision and code patterns the ADR mandates but cannot be foun"
+    - name: speckit.decision.new
+      file: presets/python/commands/speckit.decision.new.md
+      description: "Scaffold a new Architecture Decision Record using MADR 4 (full) format at docs/adr/. Auto-numbers, links to the current commit, prompts for status, drivers, opt"
+    - name: speckit.decision.supersede
+      file: presets/python/commands/speckit.decision.supersede.md
+      description: "Mark an existing ADR as superseded and scaffold its replacement. Preserves the audit trail — the old ADR keeps its content, gains a `superseded_by` link, and th"
     - name: speckit.docs.sync
       file: presets/python/commands/speckit.docs.sync.md
       description: "Sync agent context files (AGENTS.md, CLAUDE.md, .github/copilot-instructions.md, GEMINI.md) from the installed agent-context.md template. Shows a diff for revie"
@@ -58,14 +57,7 @@ provides:
       file: presets/python/commands/speckit.tasks.md
       description: "Python-shaped task generation. Converts a feature plan into a dependency-ordered task list — contracts first, then domain, repository, service, surface, wiring,"
 
-  # Agent skills (agentskills.io). Installed to <agent>/skills/<id>/SKILL.md.
   skills:
-    - id: speckit-adr-audit
-      file: skills/speckit-adr-audit/SKILL.md
-    - id: speckit-adr-new
-      file: skills/speckit-adr-new/SKILL.md
-    - id: speckit-adr-supersede
-      file: skills/speckit-adr-supersede/SKILL.md
     - id: speckit-audit
       file: skills/speckit-audit/SKILL.md
     - id: speckit-audit-deep
@@ -74,6 +66,12 @@ provides:
       file: skills/speckit-constitution-scan/SKILL.md
     - id: speckit-context-refresh
       file: skills/speckit-context-refresh/SKILL.md
+    - id: speckit-decision-audit
+      file: skills/speckit-decision-audit/SKILL.md
+    - id: speckit-decision-new
+      file: skills/speckit-decision-new/SKILL.md
+    - id: speckit-decision-supersede
+      file: skills/speckit-decision-supersede/SKILL.md
     - id: speckit-docs-sync
       file: skills/speckit-docs-sync/SKILL.md
     - id: speckit-feature
@@ -87,7 +85,6 @@ provides:
     - id: speckit-tasks
       file: skills/speckit-tasks/SKILL.md
 
-  # Knowledge base — deep reference docs loaded on demand (progressive disclosure).
   knowledge:
     install_to: ".specify/memory/knowledge"
     files:

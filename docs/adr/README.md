@@ -8,11 +8,11 @@ with one of those, the ADR wins until a new ADR is recorded that supersedes it.
 
 ## How to use
 
-- Create one with `/speckit.adr.new "<decision title>"` (or `/speckit-adr-new`).
-- Replace one with `/speckit.adr.supersede <id> "<new title>"`.
-- Enforce them against the code with `/speckit.adr.audit` — accepted ADRs may
+- Create one with `/speckit.decision.new "<decision title>"` (or `/speckit-decision-new`).
+- Replace one with `/speckit.decision.supersede <id> "<new title>"`.
+- Enforce them against the code with `/speckit.decision.audit` — accepted ADRs may
   carry an `audit:` front-matter block of `forbid` / `require` / `prefer` rules.
-- `0000-template.md` is the canonical template; copy it (or let `/speckit.adr.new`
+- `0000-template.md` is the canonical template; copy it (or let `/speckit.decision.new`
   scaffold it) — it is not itself a decision and is excluded from the index.
 
 ## Lifecycle

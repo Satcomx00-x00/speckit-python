@@ -26,8 +26,8 @@ dash form Claude Code expects:
 | Bootstrap | `/speckit-constitution-scan`, `/speckit-docs-sync` |
 | Planning | `/speckit-plan`, `/speckit-tasks` |
 | Implementation | `/speckit-feature` (runs a clarification round first), `/speckit-scaffold-module` |
-| Quality | `/speckit-audit`, `/speckit-audit-deep`, `/speckit-adr-audit` |
-| Decision memory | `/speckit-adr-new`, `/speckit-adr-supersede`, `/speckit-context-refresh` |
+| Quality | `/speckit-audit`, `/speckit-audit-deep`, `/speckit-decision-audit` |
+| Decision memory | `/speckit-decision-new`, `/speckit-decision-supersede`, `/speckit-context-refresh` |
 | Help | `/speckit-help` |
 
 The portable spec-kit form (`/speckit.feature`, etc.) lives in
@@ -54,6 +54,6 @@ the `.claude/skills` and `.specify/memory/knowledge` symlinks.
 - Audit/scan scripts are under `presets/python/scripts/bash/` and must stay
   `shellcheck`-clean.
 - Architectural decisions are recorded as ADRs under `docs/adr/` — add one with
-  `/speckit-adr-new` when you make a decision that shapes the toolkit.
+  `/speckit-decision-new` when you make a decision that shapes the toolkit.
 - Any example Python in command specs must itself be `mypy --strict`-clean and
   Ruff-clean — the toolkit must practice what it preaches.

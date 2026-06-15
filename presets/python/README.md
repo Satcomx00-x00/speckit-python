@@ -23,9 +23,9 @@ The one fixed thing is the **toolchain baseline**: `uv` + `Ruff` +
 | `commands/speckit.scaffold.module.md` | `/speckit.scaffold.module` — scaffold one typed module set for an entity (no interface surface, no clarification). |
 | `commands/speckit.audit.md` | `/speckit.audit` — regex audit against the constitution; persists JSON and prints a prioritized report by severity and section. |
 | `commands/speckit.audit.deep.md` | `/speckit.audit.deep` — audit + `ruff check` + `mypy --strict` + `pytest` + `pip-audit` + LLM file-level confirmation and cross-file pattern analysis. |
-| `commands/speckit.adr.new.md` | `/speckit.adr.new` — scaffold a MADR 4 (full) ADR at `docs/adr/NNNN-<slug>.md`; auto-numbers, links the commit, updates the index. |
-| `commands/speckit.adr.supersede.md` | `/speckit.adr.supersede` — mark an ADR superseded and scaffold its replacement, preserving the audit trail. |
-| `commands/speckit.adr.audit.md` | `/speckit.adr.audit` — audit the codebase against accepted ADRs' `audit:` (forbid/require/prefer) rules; honors `.specify/waivers.yml`. |
+| `commands/speckit.decision.new.md` | `/speckit.decision.new` — scaffold a MADR 4 (full) ADR at `docs/adr/NNNN-<slug>.md`; auto-numbers, links the commit, updates the index. |
+| `commands/speckit.decision.supersede.md` | `/speckit.decision.supersede` — mark an ADR superseded and scaffold its replacement, preserving the audit trail. |
+| `commands/speckit.decision.audit.md` | `/speckit.decision.audit` — audit the codebase against accepted ADRs' `audit:` (forbid/require/prefer) rules; honors `.specify/waivers.yml`. |
 | `commands/speckit.docs.sync.md` | `/speckit.docs.sync` — sync agent context files from `agent-context.md`, with a diff before writing. |
 | `commands/speckit.context.refresh.md` | `/speckit.context.refresh` — regenerate `.specify/memory/context-pack.md` from ADRs, plans, CHANGELOG, waivers, and session logs. |
 | `commands/speckit.help.md` | `/speckit.help` — list every command grouped by phase of use with a state-aware "suggested next". |
@@ -93,9 +93,9 @@ Both produce `.specify/memory/constitution.md` — the project's living directiv
 5. /speckit.tasks                 # generate ordered tasks
 6. /speckit.feature <feature>     # clarify, then scaffold the typed slice
 7. ... implement ...
-8. /speckit.adr.new <decision>    # record architectural decisions as they're made
+8. /speckit.decision.new <decision>    # record architectural decisions as they're made
 9. /speckit.audit                 # pre-PR quality gate (constitution rules)
-10. /speckit.adr.audit            # pre-PR quality gate (decision-specific rules)
+10. /speckit.decision.audit            # pre-PR quality gate (decision-specific rules)
 11. /speckit.audit.deep           # pre-release gate (ruff + mypy + pytest + pip-audit)
 
 # end of each session:

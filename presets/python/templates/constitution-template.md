@@ -252,7 +252,7 @@ This constitution supersedes ad-hoc conventions. When a directive here conflicts
 - **Amendments** require a PR that updates this file, a changelog entry, and — when a directive changes criticality or phase — a migration plan for code already in the affected category. Significant architectural decisions are also recorded as ADRs under `docs/adr/`.
 - **Waivers** for Critical or High directives must be recorded inline in the affected code with an owner, a reason, and an expiry date no further than one release cadence away (and/or in `.specify/waivers.yml`).
 - **Reviews** must verify compliance explicitly: every PR description references the directives it touches; every reviewer checks them.
-- **Drift audits** run on a scheduled cadence (at minimum once per release) via `/speckit.audit` and `/speckit.adr.audit` to detect silent regressions against this constitution and the accepted ADRs.
+- **Drift audits** run on a scheduled cadence (at minimum once per release) via `/speckit.audit` and `/speckit.decision.audit` to detect silent regressions against this constitution and the accepted ADRs.
 
 The runtime companion for day-to-day agent guidance lives at `templates/agent-context.md` and is mirrored into the project's agent context file (`AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`, or equivalent).
 

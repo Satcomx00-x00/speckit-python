@@ -169,5 +169,5 @@ Toolchain baseline (non-negotiable): **uv** · **Ruff** (lint + format) · **myp
 ## When in doubt
 
 1. Re-read the constitution section that governs the area you're touching.
-2. If a behavior is missing or ambiguous, **propose an amendment** (or an ADR via `/speckit.adr.new`) rather than improvising.
+2. If a behavior is missing or ambiguous, **propose an amendment** (or an ADR via `/speckit.decision.new`) rather than improvising.
 3. If a directive blocks a legitimate goal, raise it — don't quietly violate it. A waiver with an owner and an expiry beats a silent regression.

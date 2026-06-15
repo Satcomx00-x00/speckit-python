@@ -5,7 +5,7 @@ handoffs:
     agent: speckit-plan
     prompt: Build a plan from the deep audit findings. Sequence by criticality, group by area, scope per release.
   - label: Record an ADR
-    agent: speckit-adr-new
+    agent: speckit-decision-new
     prompt: Record the architectural decision behind a confirmed cross-file finding (e.g. a settings-model boundary, an async/sync split) as an ADR.
 ---
 

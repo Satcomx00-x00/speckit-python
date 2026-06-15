@@ -225,7 +225,7 @@ steps:
     condition: "{{ inputs.needs_adr == true }}"
     then:
       - id: record-adr
-        command: speckit.adr.new
+        command: speckit.decision.new
         integration: "{{ inputs.integration }}"
         input:
           args: >-

@@ -37,9 +37,9 @@ _CMD_TOKENS = [
     "constitution.scan",
     "scaffold.module",
     "audit.deep",
-    "adr.new",
-    "adr.supersede",
-    "adr.audit",
+    "decision.new",
+    "decision.supersede",
+    "decision.audit",
     "docs.sync",
     "context.refresh",
     "feature",
@@ -106,9 +106,9 @@ KNOWLEDGE_MAP: dict[str, list[str]] = {
     "audit": _ALL_KB,
     "audit.deep": _ALL_KB,
     "constitution.scan": ["packaging", "code-quality"],
-    "adr.new": ["architecture"],
-    "adr.supersede": ["architecture"],
-    "adr.audit": ["security", "architecture"],
+    "decision.new": ["architecture"],
+    "decision.supersede": ["architecture"],
+    "decision.audit": ["security", "architecture"],
     "docs.sync": ["code-quality"],
     "context.refresh": [],
     "help": [],
@@ -127,9 +127,9 @@ USE_WHEN: dict[str, str] = {
     "constitution.scan": (
         "the user wants to generate or refresh the project's Python constitution from the repo"
     ),
-    "adr.new": "the user makes an architectural decision worth recording",
-    "adr.supersede": "the user wants to replace an existing Architecture Decision Record",
-    "adr.audit": "the user wants to check the code against accepted ADRs",
+    "decision.new": "the user makes an architectural decision worth recording",
+    "decision.supersede": "the user wants to replace an existing Architecture Decision Record",
+    "decision.audit": "the user wants to check the code against accepted ADRs",
     "docs.sync": "the user wants to sync AGENTS.md / CLAUDE.md / Copilot / Gemini context files",
     "context.refresh": "a new session starts and needs the one-page project context pack",
     "help": "the user is unsure which spec-kit command to run next",
@@ -220,9 +220,9 @@ def build_skill(cmd_path: Path) -> tuple[Path, str]:
     text = cmd_path.read_text(encoding="utf-8")
     fm, body = parse_front_matter(text)
 
-    stem = cmd_path.stem  # speckit.adr.new
+    stem = cmd_path.stem  # speckit.decision.new
     short = stem[len("speckit.") :]  # adr.new
-    skill_name = "speckit-" + dash(short)  # speckit-adr-new
+    skill_name = "speckit-" + dash(short)  # speckit-decision-new
 
     desc = extract_description(fm)
     use_when = USE_WHEN.get(short)

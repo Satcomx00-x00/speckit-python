@@ -1,6 +1,13 @@
 ---
-description: Audit the codebase against accepted ADRs. For each ADR, surface code patterns that contradict the decision and code patterns the ADR mandates but cannot be found. Severity is derived from the ADR's `criticality` field. Findings respect the central waiver registry at `.specify/waivers.yml`.
+name: speckit-decision-audit
+description: "Audit the codebase against accepted ADRs. For each ADR, surface code patterns that contradict the decision and code patterns the ADR mandates but cannot be found. Severity is derived from the ADR's `criticality` field. Findings respect the central waiver registry at `.specify/waivers.yml`. Use when the user wants to check the code against accepted ADRs."
 ---
+
+# Speckit Decision Audit
+
+> This skill is generated from the Python preset command
+> `presets/python/commands/speckit.decision.audit.md` by `scripts/build-skills.py`.
+> Edit the command (or the knowledge map in the generator), then regenerate.
 
 ## User Input
 
@@ -23,7 +30,7 @@ Parse from `$ARGUMENTS`:
 
 Check for `.specify/extensions.yml`. Look for hooks under `hooks.before_audit`. Apply standard hook-processing.
 
-Verify `docs/adr/` exists. If not, abort with: `No ADRs found. Run /speckit-adr-new first.`
+Verify `docs/adr/` exists. If not, abort with: `No ADRs found. Run /speckit-decision-new first.`
 
 Verify `.specify/memory/constitution.md` exists. If not, warn: `No constitution found; criticality phase-gating will fall back to the ADR's own criticality field.`
 
@@ -145,3 +152,14 @@ Exit codes:
 ## Post-Execution Hooks
 
 Check `.specify/extensions.yml` for `hooks.after_audit`. Apply standard hook-processing.
+
+---
+
+## Knowledge base
+
+The project constitution at `.specify/memory/constitution.md` is authoritative. For deep,
+task-specific guidance (directives + Do/Don't code patterns), load only the
+relevant reference file from the installed knowledge base — do not read them all:
+
+- **security** → `.specify/memory/knowledge/security.md`
+- **architecture** → `.specify/memory/knowledge/architecture.md`

@@ -1,12 +1,12 @@
 ---
-name: speckit-adr-supersede
+name: speckit-decision-supersede
 description: "Mark an existing ADR as superseded and scaffold its replacement. Preserves the audit trail — the old ADR keeps its content, gains a `superseded_by` link, and the index updates its status. The new ADR carries a back-reference and inherits the old ADR's constitution_refs unless overridden. Use when the user wants to replace an existing Architecture Decision Record."
 ---
 
-# Speckit ADR Supersede
+# Speckit Decision Supersede
 
 > This skill is generated from the Python preset command
-> `presets/python/commands/speckit.adr.supersede.md` by `scripts/build-skills.py`.
+> `presets/python/commands/speckit.decision.supersede.md` by `scripts/build-skills.py`.
 > Edit the command (or the knowledge map in the generator), then regenerate.
 
 ## User Input
@@ -30,7 +30,7 @@ If either positional arg is missing, ask for it.
 
 ## Pre-Execution Checks
 
-Check for `.specify/extensions.yml`. Look for hooks under `hooks.before_adr`. Apply standard hook-processing.
+Check for `.specify/extensions.yml`. Look for hooks under `hooks.before_decision`. Apply standard hook-processing.
 
 Verify the prior ADR file exists at `docs/adr/<NNNN>-*.md`. If not, abort with: `ADR <id> not found.`
 
@@ -46,9 +46,9 @@ Load its front-matter and "More Information" section. Capture:
 
 Refuse to supersede an ADR whose status is already `superseded`, `rejected`, or `deprecated` unless `--force` is passed.
 
-### 2. Delegate to /speckit-adr-new
+### 2. Delegate to /speckit-decision-new
 
-Invoke the same logic as `/speckit-adr-new` with:
+Invoke the same logic as `/speckit-decision-new` with:
 - `--supersedes <prior ID>`
 - `--status <status>`
 - `--owner <owner>`
@@ -92,14 +92,14 @@ In `docs/adr/README.md`, update the prior ADR's `Status` column to `superseded` 
 - Fill in the new ADR's Context, Decision, and Consequences sections.
 - If the supersession changes a Critical directive, run /speckit-constitution-scan.
 - Search the codebase for patterns implementing the prior ADR — they may now
-  contradict the new one. /speckit-adr-audit will surface them.
+  contradict the new one. /speckit-decision-audit will surface them.
 - If status is `proposed`, do not delete code implementing the prior ADR until
   the new one is `accepted`.
 ```
 
 ## Post-Execution Hooks
 
-Check `.specify/extensions.yml` for `hooks.after_adr`. Apply standard hook-processing.
+Check `.specify/extensions.yml` for `hooks.after_decision`. Apply standard hook-processing.
 
 ---
 

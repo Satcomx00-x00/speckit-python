@@ -44,7 +44,7 @@ Each command is invokable in two forms:
 - **spec-kit form** — `/speckit.<name>` (dot-separated; the canonical form used throughout this preset)
 - **Claude Code form** — `/speckit-<name>` (dash form; installed as a Claude Code slash command)
 
-Both forms run the same spec file. The listing below uses the spec-kit form; the dash form is the same name with `.` → `-` (e.g. `/speckit-adr-new` ⇄ `/speckit-adr-new`).
+Both forms run the same spec file. The listing below uses the spec-kit form; the dash form is the same name with `.` → `-` (e.g. `/speckit-decision-new` ⇄ `/speckit-decision-new`).
 
 ```
 # Python spec-kit command reference
@@ -92,7 +92,7 @@ Every command runs as `/speckit.<name>` (spec-kit) or `/speckit-<name>` (Claude 
       quality, architecture, boundaries, error handling, concurrency, security,
       packaging. Fast; run on every PR.
 
-  /speckit-adr-audit
+  /speckit-decision-audit
       Code-vs-ADR audit using each ADR's optional `audit:` block (forbid /
       require / prefer). Honors .specify/waivers.yml. Phase-gated severity.
 
@@ -102,11 +102,11 @@ Every command runs as `/speckit.<name>` (spec-kit) or `/speckit-<name>` (Claude 
 
 ## Decision memory — capture & carry context
 
-  /speckit-adr-new <title>
+  /speckit-decision-new <title>
       Capture an architectural decision as you make it. MADR 4 (full) format,
       auto-numbered, links the current commit, updates docs/adr/README.md.
 
-  /speckit-adr-supersede <id> <new-title>
+  /speckit-decision-supersede <id> <new-title>
       Replace an outdated ADR. Preserves the audit trail and carries
       constitution_refs forward.
 
@@ -144,7 +144,7 @@ After the listing, print one line tailored to project state. This is best-effort
 | No `.specify/memory/constitution.md` | `Suggested next: /speckit-constitution-scan` |
 | Constitution exists, no `AGENTS.md`/`CLAUDE.md` | `Suggested next: /speckit-docs-sync` |
 | Constitution exists, no `specs/*/plan.md` | `Suggested next: /speckit-plan "<feature>"` |
-| Plans exist, `docs/adr/` empty | `Suggested next: /speckit-adr-new "..."` to capture in-flight decisions |
+| Plans exist, `docs/adr/` empty | `Suggested next: /speckit-decision-new "..."` to capture in-flight decisions |
 | `.specify/memory/context-pack.md` missing or older than newest ADR | `Suggested next: /speckit-context-refresh` |
 | Otherwise | `Suggested next: /speckit-audit` (the cheapest signal before any commit) |
 

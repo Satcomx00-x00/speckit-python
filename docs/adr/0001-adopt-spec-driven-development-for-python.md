@@ -75,7 +75,7 @@ any Python project, while a small, fixed toolchain makes those behaviors
 **verifiable**: mypy `--strict` proves type-safety, Ruff proves style and
 catches security smells, uv proves reproducibility, and pytest proves behavior.
 This is the modern (2026) consensus stack for serious Python and lets the
-`/speckit.audit` and `/speckit.adr.audit` commands check compliance
+`/speckit.audit` and `/speckit.decision.audit` commands check compliance
 mechanically rather than relying on reviewer memory.
 
 ### Confirmation

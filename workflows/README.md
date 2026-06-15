@@ -34,7 +34,7 @@ scope / spec  →  clarify  →  plan  →  tasks  →  scaffold (speckit.featur
 | 4 | `scaffold` | command (`speckit.feature`) | Generates the typed slice for the chosen surface. |
 | 5 | `quality-gates` | if → shell ×4 + gate | Runs the uv quality gates (only when `run_quality_gates` is true). |
 | 6 | `audit` | command (`speckit.audit`) | Audits the slice against type-safety, security, and architecture directives. |
-| 7 | `adr` | if → command (`speckit.adr.new`) | Records an ADR (only when `needs_adr` is true). |
+| 7 | `adr` | if → command (`speckit.decision.new`) | Records an ADR (only when `needs_adr` is true). |
 | 8 | `ship` | gate | Final pre-ship checklist (`on_reject: abort`). |
 
 ### Inputs
