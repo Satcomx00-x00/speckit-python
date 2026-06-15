@@ -124,6 +124,50 @@ what the core loop needs versus what to run only when it applies:
 > Commands install dash-form for Claude Code (`/speckit-feature`) and ship in
 > portable spec-kit form (`/speckit.feature`) under `presets/python/commands/`.
 
+### What each command does — and why it exists
+
+- **`/speckit-constitution-scan`** — Reads your repo (layout, `pyproject.toml`,
+  tooling, typing/async signals, CI) and writes a phased Python constitution.
+  *Why:* every later command needs one machine-checkable definition of "good
+  Python" to enforce, instead of leaving quality to taste.
+- **`/speckit-docs-sync`** — Regenerates `AGENTS.md`, `CLAUDE.md`, Copilot, and
+  Gemini context files from one template. *Why:* so every agent reads the same
+  operating rules and they never drift apart.
+- **`/speckit-context-refresh`** — Rebuilds the one-page context pack (ADR index,
+  in-flight plans, recent changes, active waivers, constitution version). *Why:*
+  a new AI session can load the whole project state from a single file instead of
+  re-deriving it.
+- **`/speckit-plan`** — Decomposes a feature into layers, data flow, an error
+  taxonomy, and a testing plan before any code. *Why:* design decisions get made
+  deliberately and reviewably, not improvised mid-scaffold.
+- **`/speckit-tasks`** — Turns a plan into a dependency-ordered, checkable task
+  list with binary acceptance criteria. *Why:* makes progress trackable and keeps
+  the build honest about what "done" means.
+- **`/speckit-feature`** — Clarifies (up to 5 questions), then scaffolds a full
+  typed feature slice: contracts → models → repository → service → surface →
+  tests. *Why:* this is the core builder — it turns an ambiguous request into a
+  `mypy --strict`-clean, tested slice in one pass.
+- **`/speckit-scaffold-module`** — The lighter alternative: one typed entity, no
+  clarification round, no interface layer. *Why:* when you need a single model +
+  repo + service + tests, not a whole feature.
+- **`/speckit-decision-new`** — Records an architectural decision as a MADR 4 ADR
+  under `docs/adr/`. *Why:* captures *why* a choice was made so it survives past
+  the conversation and can be enforced later.
+- **`/speckit-decision-supersede`** — Replaces an existing ADR while preserving
+  the audit trail. *Why:* decisions change; the history of *why they changed*
+  shouldn't be lost.
+- **`/speckit-audit`** — Fast regex audit of the code against the constitution.
+  *Why:* a quick, cheap gate to catch regressions before opening a PR.
+- **`/speckit-decision-audit`** — Checks the code against accepted ADRs'
+  forbid/require/prefer rules. *Why:* makes recorded decisions enforceable, not
+  just documentation people forget.
+- **`/speckit-audit-deep`** — The full gate: audit + `ruff` + `mypy --strict` +
+  `pytest` + `pip-audit` + cross-file analysis. *Why:* highest-signal check to run
+  before a release, when "probably fine" isn't good enough.
+- **`/speckit-help`** — Lists commands by phase with a state-aware "suggested
+  next". *Why:* so you (or a new contributor, human or AI) never have to guess
+  which command comes next.
+
 ### ⭐ `/speckit-feature` — clarify, then scaffold
 
 It **starts by asking up to five high-impact questions** (entity fields, surface,
