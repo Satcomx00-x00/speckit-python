@@ -141,3 +141,11 @@ def load_report(report_dir: Path, report_id: str) -> str:
 - [ ] No premature abstraction; duplication is removed only at the third occurrence.
 - [ ] No dead code, commented-out blocks, leftover `print`, or wildcard imports.
 - [ ] Public APIs carry docstrings explaining the contract and the *why*.
+
+## See also
+
+Deep-dive craft references in this knowledge base:
+
+- [principles.md](principles.md) — SOLID, DRY/KISS/YAGNI, Law of Demeter, CQS, Separation of Concerns, Fail Fast, composition over inheritance.
+- [design-patterns.md](design-patterns.md) — the 23 Gang-of-Four patterns in Pythonic form.
+- [refactoring.md](refactoring.md) — a catalog of behavior-preserving refactorings (before → after).

@@ -81,3 +81,5 @@ relevant reference file from the installed knowledge base — do not read them a
 - **architecture** → `.specify/memory/knowledge/architecture.md`
 - **data & boundaries** → `.specify/memory/knowledge/data-and-boundaries.md`
 - **testing** → `.specify/memory/knowledge/testing.md`
+- **principles** → `.specify/memory/knowledge/principles.md`
+- **design patterns** → `.specify/memory/knowledge/design-patterns.md`

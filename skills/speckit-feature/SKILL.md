@@ -591,3 +591,5 @@ relevant reference file from the installed knowledge base — do not read them a
 - **error handling** → `.specify/memory/knowledge/error-handling.md`
 - **testing** → `.specify/memory/knowledge/testing.md`
 - **security** → `.specify/memory/knowledge/security.md`
+- **principles** → `.specify/memory/knowledge/principles.md`
+- **design patterns** → `.specify/memory/knowledge/design-patterns.md`

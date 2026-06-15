@@ -4,7 +4,7 @@ extension:
   id: python
   name: "Python Spec Kit"
   version: "0.1.0"
-  description: "Self-contained, state-of-the-art Spec-Driven Development for any Python project: a phased constitution, 13 commands, 13 agentskills.io skills, and an 11-topic knowledge base — enforcing uv + Ruff + mypy --strict + pytest."
+  description: "Self-contained, state-of-the-art Spec-Driven Development for any Python project: a phased constitution, 13 commands, 13 agentskills.io skills, and a Python knowledge base (topics + principles + design patterns + refactorings) — enforcing uv + Ruff + mypy --strict + pytest."
   author: "Satcomx00-x00"
   repository: "https://github.com/Satcomx00-x00/speckit-python"
   license: "MIT"
@@ -96,10 +96,13 @@ provides:
       - knowledge/code-quality.md
       - knowledge/concurrency.md
       - knowledge/data-and-boundaries.md
+      - knowledge/design-patterns.md
       - knowledge/error-handling.md
       - knowledge/observability.md
       - knowledge/packaging.md
       - knowledge/performance.md
+      - knowledge/principles.md
+      - knowledge/refactoring.md
       - knowledge/security.md
       - knowledge/testing.md
       - knowledge/type-safety.md
@@ -115,6 +118,7 @@ tags:
   - "python"
   - "skills"
   - "knowledge"
+  - "patterns"
   - "mypy"
   - "ruff"
   - "uv"

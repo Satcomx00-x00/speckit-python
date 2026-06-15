@@ -93,3 +93,4 @@ relevant reference file from the installed knowledge base — do not read them a
 - **security** → `.specify/memory/knowledge/security.md`
 - **testing** → `.specify/memory/knowledge/testing.md`
 - **performance** → `.specify/memory/knowledge/performance.md`
+- **principles** → `.specify/memory/knowledge/principles.md`

@@ -70,6 +70,9 @@ _ALL_KB = [
     "testing",
     "packaging",
     "observability",
+    "principles",
+    "design-patterns",
+    "refactoring",
 ]
 KNOWLEDGE_MAP: dict[str, list[str]] = {
     "feature": [
@@ -79,9 +82,26 @@ KNOWLEDGE_MAP: dict[str, list[str]] = {
         "error-handling",
         "testing",
         "security",
+        "principles",
+        "design-patterns",
     ],
-    "scaffold.module": ["type-safety", "architecture", "data-and-boundaries", "testing"],
-    "plan": ["architecture", "error-handling", "concurrency", "security", "testing", "performance"],
+    "scaffold.module": [
+        "type-safety",
+        "architecture",
+        "data-and-boundaries",
+        "testing",
+        "principles",
+        "design-patterns",
+    ],
+    "plan": [
+        "architecture",
+        "error-handling",
+        "concurrency",
+        "security",
+        "testing",
+        "performance",
+        "principles",
+    ],
     "tasks": ["type-safety", "architecture", "testing"],
     "audit": _ALL_KB,
     "audit.deep": _ALL_KB,

@@ -27,6 +27,18 @@ Each file is self-contained: an agent reads only the one file relevant to the ta
 | [packaging.md](packaging.md) | `pyproject.toml` as single source, `uv lock` + pinned interpreter, dependency groups, version matrix, semver + `py.typed` for libraries. |
 | [observability.md](observability.md) | Logging not `print`, `NullHandler` in libraries, structured logs + correlation id, CI gates, immutable traceable artifacts, reviewed reversible migrations. |
 
+### Design & craft references
+
+A catalog of language-agnostic craft, ported to idiomatic, `mypy --strict`-clean
+Python. Adapted from [Satcomx00-x00/skills-db](https://github.com/Satcomx00-x00/skills-db)
+(`skills/code-quality`, MIT).
+
+| File | Covers |
+|---|---|
+| [principles.md](principles.md) | SOLID, DRY/KISS/YAGNI, Law of Demeter, Command–Query Separation, Separation of Concerns, Fail Fast, composition over inheritance. |
+| [design-patterns.md](design-patterns.md) | The 23 GoF patterns (creational / structural / behavioral), each with intent, "use when", and a Pythonic example. |
+| [refactoring.md](refactoring.md) | 12 refactorings (extract method/class, guard clauses, replace conditional with polymorphism, …) with before → after Python. |
+
 ## How to use
 
 1. Identify the area of the task (typing, errors, security, ...).

@@ -261,3 +261,6 @@ relevant reference file from the installed knowledge base — do not read them a
 - **testing** → `.specify/memory/knowledge/testing.md`
 - **packaging** → `.specify/memory/knowledge/packaging.md`
 - **observability** → `.specify/memory/knowledge/observability.md`
+- **principles** → `.specify/memory/knowledge/principles.md`
+- **design patterns** → `.specify/memory/knowledge/design-patterns.md`
+- **refactoring** → `.specify/memory/knowledge/refactoring.md`
