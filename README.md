@@ -94,21 +94,32 @@ flowchart TD
 
 ## Commands
 
-| Phase | Command | Does |
-|---|---|---|
-| **Bootstrap** | `/speckit-constitution-scan` | Inventory the repo and export a phased Python constitution with a Sync Impact Report |
-| | `/speckit-docs-sync` | Sync `AGENTS.md` / `CLAUDE.md` / Copilot / Gemini from the agent-context template |
-| **Build** | `/speckit-plan` | Decompose a feature into layers, data flow, error taxonomy, and a testing plan |
-| | `/speckit-tasks` | Turn a plan into a dependency-ordered task list with binary acceptance criteria |
-| | `/speckit-feature` | **Clarify, then scaffold** a full typed feature slice (see below) |
-| | `/speckit-scaffold-module` | Scaffold one typed module: contracts → domain → repository → service → tests |
-| **Quality** | `/speckit-audit` | Audit the code against the constitution (regex rules) |
-| | `/speckit-audit-deep` | Audit + `ruff` + `mypy --strict` + `pytest` + `pip-audit` + cross-file analysis |
-| | `/speckit-decision-audit` | Check the code against accepted ADRs' forbid/require/prefer rules |
-| **Decision memory** | `/speckit-decision-new` | Record a decision as a MADR 4 ADR under `docs/adr/` |
-| | `/speckit-decision-supersede` | Replace an ADR, preserving the audit trail |
-| | `/speckit-context-refresh` | Regenerate the one-page context pack the next session reads first |
-| **Help** | `/speckit-help` | List commands by phase with a state-aware "suggested next" |
+Listed in the order you'd typically run them. The **Required?** column tells you
+what the core loop needs versus what to run only when it applies:
+
+- ✅ **Required** — part of the core path; do this.
+- 🔶 **Recommended** — strongly advised, but you can skip it.
+- ⚪ **Optional** — run only when the situation calls for it.
+
+| # | Command | Phase | Required? | What it does |
+|---|---|---|---|---|
+| 1 | `/speckit-constitution-scan` | Bootstrap · once per project | ✅ Required | Inventory the repo and export a phased Python constitution with a Sync Impact Report |
+| 2 | `/speckit-docs-sync` | Bootstrap · once per project | 🔶 Recommended | Sync `AGENTS.md` / `CLAUDE.md` / Copilot / Gemini from the agent-context template |
+| 3 | `/speckit-context-refresh` | Bootstrap · then any new session | ⚪ Optional | Regenerate the one-page context pack the next session reads first |
+| 4 | `/speckit-plan` | Build · per feature | 🔶 Recommended | Decompose a feature into layers, data flow, error taxonomy, and a testing plan |
+| 5 | `/speckit-tasks` | Build · per feature | ⚪ Optional | Turn a plan into a dependency-ordered task list with binary acceptance criteria |
+| 6 | `/speckit-feature` | Build · per feature | ✅ Required † | **Clarify, then scaffold** a full typed feature slice (see below) |
+| 6′ | `/speckit-scaffold-module` | Build · per entity | ⚪ Optional † | Lighter alternative: scaffold one typed module — contracts → domain → repository → service → tests |
+| 7 | `/speckit-decision-new` | Decision memory · when you decide | ⚪ Optional | Record an architectural decision as a MADR 4 ADR under `docs/adr/` |
+| 8 | `/speckit-decision-supersede` | Decision memory · when a decision changes | ⚪ Optional | Replace an existing ADR, preserving the audit trail |
+| 9 | `/speckit-audit` | Quality gate · before every PR | 🔶 Recommended | Audit the code against the constitution (regex rules) |
+| 10 | `/speckit-decision-audit` | Quality gate · when ADRs exist | ⚪ Optional | Check the code against accepted ADRs' forbid/require/prefer rules |
+| 11 | `/speckit-audit-deep` | Quality gate · before release | ⚪ Optional | Audit + `ruff` + `mypy --strict` + `pytest` + `pip-audit` + cross-file analysis |
+| ⟳ | `/speckit-help` | Any time | ⚪ Optional | List commands by phase with a state-aware "suggested next" |
+
+> † Step 6 is where code actually gets written: run **`/speckit-feature`** for a
+> full feature slice, **or** `/speckit-scaffold-module` for a single entity — pick
+> one. Everything before it is preparation; everything after it is verification.
 
 > Commands install dash-form for Claude Code (`/speckit-feature`) and ship in
 > portable spec-kit form (`/speckit.feature`) under `presets/python/commands/`.
