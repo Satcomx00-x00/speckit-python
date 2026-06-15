@@ -1,0 +1,20 @@
+# Central waiver registry for /speckit.decision.audit and /speckit.audit.
+#
+# A waiver temporarily suppresses a specific finding. Critical and High waivers
+# MUST carry an owner, a reason, and an expiry no further than one release
+# cadence away. Expired waivers are reported and do NOT suppress the finding.
+#
+# Format:
+#   - id: <ADR-NNNN>/<forbid|require|prefer>#<pattern-index>   # for ADR audits
+#     # or: <RULE_ID>                                          # for constitution audits
+#     reason: <why this is acceptable, and the remediation plan>
+#     owner: <@handle>
+#     expires: <YYYY-MM-DD>
+#
+# Example:
+#   - id: ADR-0001/forbid#1
+#     reason: Legacy module pending migration to Ruff-only formatting
+#     owner: "@satcom"
+#     expires: 2026-09-01
+
+waivers: []

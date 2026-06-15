@@ -1,0 +1,106 @@
+schema_version: "1.0"
+
+preset:
+  id: "python"
+  name: "Python Project"
+  version: "0.1.0"
+  description: >-
+    State-of-the-art directives for any Python project — web service, CLI,
+    library, data pipeline, or automation. Encodes behaviors, not a stack:
+    strict static typing (mypy --strict), parse-don't-validate boundaries,
+    pure-core/imperative-shell architecture, typed errors, security by default,
+    deterministic tests, and reproducible packaging. Toolchain baseline:
+    uv + Ruff + mypy --strict + pytest.
+  author: "spec-kit"
+  repository: "https://github.com/Satcomx00-x00/speckit-python"
+  license: "MIT"
+
+requires:
+  speckit_version: ">=0.6.0"
+
+provides:
+  templates:
+    - type: "template"
+      name: "constitution-template"
+      file: "templates/constitution-template.md"
+      description: "Python project constitution — phased, criticality-tagged behavioral directives across type-safety, code quality, architecture, data/validation, errors, concurrency, security, performance, testing, packaging, and operations."
+      replaces: "constitution-template"
+
+    - type: "template"
+      name: "agent-context"
+      file: "templates/agent-context.md"
+      description: "Compressed always-on agent rules for Python development; mirror into AGENTS.md / CLAUDE.md / .github/copilot-instructions.md / GEMINI.md."
+
+    - type: "command"
+      name: "speckit.constitution.scan"
+      file: "commands/speckit.constitution.scan.md"
+      description: "Scan the repo (pyproject + tooling signals + source layout + Markdown docs) and export a Python constitution at .specify/memory/constitution.md with a Sync Impact Report mapping evidence to directives."
+
+    - type: "command"
+      name: "speckit.feature"
+      file: "commands/speckit.feature.md"
+      description: "End-to-end Python feature scaffold. Runs an interactive clarification round first (up to 5 high-impact questions with recommended defaults), then generates a layered, mypy --strict-clean slice: contracts → domain → repository Protocol → pure Result services → interface surface → tests."
+
+    - type: "command"
+      name: "speckit.plan"
+      file: "commands/speckit.plan.md"
+      description: "Python-specialized feature planning. Decomposes a feature into typed contracts, domain models, repository seams, pure services, interface surface, concurrency model, error taxonomy, security checklist, and a testing plan — tagged with Phase and Criticality."
+
+    - type: "command"
+      name: "speckit.tasks"
+      file: "commands/speckit.tasks.md"
+      description: "Python-shaped task generation. Converts a plan into a dependency-ordered task list (contracts → domain → repository → service → surface → wiring → tests) with binary acceptance criteria and constitution directive references."
+
+    - type: "command"
+      name: "speckit.scaffold.module"
+      file: "commands/speckit.scaffold.module.md"
+      description: "Scaffold one typed module set for an entity: contracts, domain model (branded ids), repository Protocol + in-memory adapter, pure Result service, and pytest unit tests. Lighter than /speckit.feature — no interface surface."
+
+    - type: "command"
+      name: "speckit.audit"
+      file: "commands/speckit.audit.md"
+      description: "Audit the codebase against the Python constitution. Runs the audit script, persists JSON to .specify/audits/, and produces a prioritized report grouped by severity and section."
+
+    - type: "command"
+      name: "speckit.audit.deep"
+      file: "commands/speckit.audit.deep.md"
+      description: "Deep audit: runs the regex audit, then layers ruff check, ruff format --check, mypy --strict, pytest, and pip-audit, plus LLM file-level confirmation and cross-file pattern analysis."
+
+    - type: "command"
+      name: "speckit.decision.new"
+      file: "commands/speckit.decision.new.md"
+      description: "Scaffold a new Architecture Decision Record at docs/adr/ in MADR 4 (full) format. Auto-numbers, links the current commit, supports --supersedes, and updates the ADR index."
+
+    - type: "command"
+      name: "speckit.decision.supersede"
+      file: "commands/speckit.decision.supersede.md"
+      description: "Mark an existing ADR as superseded and scaffold its replacement. Preserves the audit trail and carries constitution_refs over by default."
+
+    - type: "command"
+      name: "speckit.decision.audit"
+      file: "commands/speckit.decision.audit.md"
+      description: "Audit the codebase against accepted ADRs' forbid/require/prefer rules. Honors the central waiver registry at .specify/waivers.yml, phase-gates findings, and surfaces ADRs without an audit block as aspirational."
+
+    - type: "command"
+      name: "speckit.docs.sync"
+      file: "commands/speckit.docs.sync.md"
+      description: "Sync AGENTS.md / CLAUDE.md / .github/copilot-instructions.md / GEMINI.md from the installed agent-context.md template. Shows a diff for review before writing."
+
+    - type: "command"
+      name: "speckit.context.refresh"
+      file: "commands/speckit.context.refresh.md"
+      description: "Regenerate .specify/memory/context-pack.md — the one-page snapshot every new AI session reads first. Aggregates ADRs, in-flight plans, CHANGELOG, waivers, constitution phase, and recent session logs."
+
+    - type: "command"
+      name: "speckit.help"
+      file: "commands/speckit.help.md"
+      description: "List every command in this preset grouped by phase of use (bootstrap / planning / implementation / quality / decision-memory) with a state-aware 'suggested next' line."
+
+tags:
+  - "python"
+  - "typing"
+  - "mypy"
+  - "ruff"
+  - "uv"
+  - "pytest"
+  - "production"
